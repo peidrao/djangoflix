@@ -29,7 +29,6 @@ class PlaylistModelTestCase(TestCase):
         qs = self.playlist2.videos.all()
         self.assertEqual(qs.count(), 3)
 
-
     def test_slug_field(self):
         self.assertEqual(self.playlist1.slug, 'playlist-1')
         self.assertEqual(self.playlist2.slug, 'playlist-2')
