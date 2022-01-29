@@ -43,6 +43,9 @@ class Video(models.Model):
     def is_published(self):
         return self.is_active
 
+    def get_playlists_ids(self):
+        return list(self.playlist_set.all().values_list('id', flat=True))
+
 
 class VideoPublishedProxy(Video):
     class Meta:
