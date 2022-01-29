@@ -28,7 +28,8 @@ class Playlist(models.Model):
     description = models.TextField()
     slug = models.SlugField(blank=True, null=True)
     is_active = models.BooleanField(default=True)
-    video = models.ForeignKey(Video, null=True, on_delete=models.SET_NULL)
+    video = models.ForeignKey(Video, null=True, related_name='featured_playlist', on_delete=models.SET_NULL)
+    videos = models.ManyToManyField(Video, related_name='playlist_item', blank=True)
     state = models.CharField(
         max_length=2, choices=PublishedStateOptions.choices, default=PublishedStateOptions.DRAFT)
     published_timestamp = models.DateTimeField(
