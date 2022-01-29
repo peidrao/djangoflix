@@ -2,15 +2,9 @@
 from django.db import models
 from django.db.models.signals import pre_save
 from django.utils import timezone
-from django.utils.text import slugify
 
-
-class PublishedStateOptions(models.TextChoices):
-    # CONSTANT = DB_VALUE, USER_DISPLAY_VA
-    PUBLISHED = 'PU', 'Publish'
-    DRAFT = 'DR', 'Draft'
-    # UNLISTED = 'UN', 'Publish'
-    # PRIVATE = 'PR', 'Private'
+from django_flix.db.choices import PublishedStateOptions
+from django_flix.db.receivers import publish_state_pre_save, slugify_pre_save
 
 
 class VideoQuerySet(models.QuerySet):
@@ -62,20 +56,6 @@ class VideoAllProxy(Video):
         proxy = True
         verbose_name = 'All Video'
         verbose_name_plural = 'All Videos'
-
-
-def publish_state_pre_save(sender, instance, *args, **kwargs):
-    is_publish = instance.state == PublishedStateOptions.PUBLISHED
-    is_draft = instance.state == PublishedStateOptions.DRAFT
-    if is_publish and instance.published_timestamp is None:
-        instance.published_timestamp = timezone.now()
-    elif is_draft:
-        instance.published_timestamp = None
-
-
-def slugify_pre_save(sender, instance, *args, **kwargs):
-    if instance.slug is None:
-        instance.slug = slugify(instance.title)
 
 
 pre_save.connect(publish_state_pre_save, sender=Video)
