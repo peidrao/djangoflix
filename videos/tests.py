@@ -1,6 +1,5 @@
 from django.test import TestCase
 from django.utils import timezone
-from django.utils.text import slugify
 
 from .models import Video
 
@@ -32,3 +31,10 @@ class VideoModelTestCase(TestCase):
         published_qs = Video.objects.filter(
             state=Video.VideoStateOptions.PUBLISHED, created_at__lte=now)
         self.assertTrue(published_qs.exists())
+
+    def test_publish_manager(self):
+        published_qs = Video.objects.all().published()
+        published_qs2 = Video.objects.published()
+        self.assertTrue(published_qs.exists())
+        self.assertTrue(published_qs2.exists())
+        self.assertEqual(published_qs.count(), published_qs2.count())
