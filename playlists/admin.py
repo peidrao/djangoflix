@@ -6,7 +6,7 @@ from django_flix.db.choices import PlaylistTypeChoice
 
 class MovideProxyAdmin(admin.ModelAdmin):
     list_display = ['title']
-    fields = ['title', 'description', 'state', 'video', 'slug']
+    fields = ['title', 'description', 'state', 'video', 'slug', 'category']
 
     class Meta:
         model = MovieProxy
@@ -39,7 +39,7 @@ class TVShowSeasonProxyInline(admin.TabularInline):
 
 class TVShowProxyAdmin(admin.ModelAdmin):
     inlines = [TVShowSeasonProxyInline]
-    fields = ['title', 'description', 'state', 'video', 'slug']
+    fields = ['title', 'description', 'state', 'video', 'slug', 'category']
 
     class Meta:
         model = TVShowProxy

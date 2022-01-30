@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models.signals import pre_save
 from django.utils import timezone
+from categories.models import Category
 
 from django_flix.db.choices import PlaylistTypeChoice, PublishedStateOptions
 from django_flix.db.receivers import publish_state_pre_save, slugify_pre_save
@@ -26,7 +27,8 @@ class PlaylistManager(models.Manager):
 
 
 class Playlist(models.Model):
-    parent = models.ForeignKey('self', blank=True, on_delete=models.SET_NULL, null=True)
+    parent = models.ForeignKey(
+        'self', blank=True, on_delete=models.SET_NULL, null=True)
     order = models.IntegerField(default=1)
     title = models.CharField(max_length=150)
     description = models.TextField()
@@ -35,6 +37,8 @@ class Playlist(models.Model):
     type_video = models.CharField(max_length=3,
                                   choices=PlaylistTypeChoice.choices,
                                   default=PlaylistTypeChoice.PLAYLIST)
+    category = models.ForeignKey(
+        Category, on_delete=models.SET_NULL, null=True, blank=True)
     video = models.ForeignKey(Video,
                               null=True,
                               related_name='featured_playlist',
@@ -76,7 +80,7 @@ class TVShowProxy(Playlist):
         verbose_name = 'TV Show'
         verbose_name_plural = 'TV Shows'
         proxy = True
-    
+
     def save(self, *args, **kwargs):
         self.type_video = PlaylistTypeChoice.SHOW
         super().save(*args, **kwargs)
@@ -99,6 +103,7 @@ class TVShowSeasonProxy(Playlist):
     def save(self, *args, **kwargs):
         self.type_video = PlaylistTypeChoice.SEASON
         super().save(*args, **kwargs)
+
 
 class MovieProxyManager(PlaylistManager):
 
