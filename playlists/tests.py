@@ -6,11 +6,18 @@ from videos.models import Video
 
 
 class PlaylistModelTestCase(TestCase):
+
     def create_show_with_seasons(self):
         self.the_office = Playlist.objects.create(title='The Office')
-        Playlist.objects.create(title='The Office - Season 1', parent=self.the_office, order=1)
-        Playlist.objects.create(title='The Office - Season 2', parent=self.the_office, order=2)
-        Playlist.objects.create(title='The Office - Season 3', parent=self.the_office, order=3)
+        Playlist.objects.create(title='The Office - Season 1',
+                                parent=self.the_office,
+                                order=1)
+        Playlist.objects.create(title='The Office - Season 2',
+                                parent=self.the_office,
+                                order=2)
+        Playlist.objects.create(title='The Office - Season 3',
+                                parent=self.the_office,
+                                order=3)
 
     def create_video(self):
         self.video1 = Video.objects.create(title='Video #1', video_id='abc123')
@@ -20,17 +27,18 @@ class PlaylistModelTestCase(TestCase):
     def setUp(self):
         self.create_video()
         self.create_show_with_seasons()
-        self.playlist1 = Playlist.objects.create(
-            title='Playlist #1', video=self.video1)
-        self.playlist2 = Playlist.objects.create(title='Playlist #2', video=self.video1,
-                                                 state=PublishedStateOptions.PUBLISHED)
+        self.playlist1 = Playlist.objects.create(title='Playlist #1',
+                                                 video=self.video1)
+        self.playlist2 = Playlist.objects.create(
+            title='Playlist #2',
+            video=self.video1,
+            state=PublishedStateOptions.PUBLISHED)
         self.playlist2.videos.add(self.video1, self.video2, self.video3)
         self.playlist2.save()
 
     def test_show_has_seasons(self):
         seasons = self.the_office.playlist_set.all()
         self.assertTrue(seasons.exists())
-
 
     def test_video_playlist(self):
         qs = self.video1.featured_playlist.all()
@@ -46,8 +54,9 @@ class PlaylistModelTestCase(TestCase):
 
     def test_video_playlist_ids_property(self):
         ids = self.playlist1.video.get_playlists_ids()
-        actual_ids = list(Playlist.objects.filter(
-            video=self.video1).values_list('id', flat=True))
+        actual_ids = list(
+            Playlist.objects.filter(video=self.video1).values_list('id',
+                                                                   flat=True))
         self.assertEqual(ids, actual_ids)
 
     def test_valid_title(self):
