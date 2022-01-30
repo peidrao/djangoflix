@@ -1,19 +1,21 @@
-
 from django.db import models
 from django.db.models.signals import pre_save
 from django.utils import timezone
 
-from django_flix.db.choices import PublishedStateOptions
+from django_flix.db.choices import PlaylistTypeChoice, PublishedStateOptions
 from django_flix.db.receivers import publish_state_pre_save, slugify_pre_save
 
 
 class VideoQuerySet(models.QuerySet):
+
     def published(self):
         now = timezone.now()
-        return self.filter(state=PublishedStateOptions.PUBLISHED, published_timestamp__lte=now)
+        return self.filter(state=PublishedStateOptions.PUBLISHED,
+                           published_timestamp__lte=now)
 
 
 class VideoManager(models.Manager):
+
     def get_queryset(self):
         return VideoQuerySet(self.model, using=self._db)
 
@@ -25,12 +27,18 @@ class Video(models.Model):
     title = models.CharField(max_length=150)
     description = models.TextField()
     slug = models.SlugField(blank=True, null=True)
+    type_video = models.CharField(max_length=3,
+                                  choices=PlaylistTypeChoice.choices,
+                                  default=PlaylistTypeChoice.PLAYLIST)
     video_id = models.CharField(max_length=100, unique=True)
     is_active = models.BooleanField(default=True)
-    state = models.CharField(
-        max_length=2, choices=PublishedStateOptions.choices, default=PublishedStateOptions.DRAFT)
-    published_timestamp = models.DateTimeField(
-        auto_now_add=False, auto_now=False, blank=True, null=True)
+    state = models.CharField(max_length=2,
+                             choices=PublishedStateOptions.choices,
+                             default=PublishedStateOptions.DRAFT)
+    published_timestamp = models.DateTimeField(auto_now_add=False,
+                                               auto_now=False,
+                                               blank=True,
+                                               null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -48,6 +56,7 @@ class Video(models.Model):
 
 
 class VideoPublishedProxy(Video):
+
     class Meta:
         proxy = True
         verbose_name = 'Published Video'
@@ -55,6 +64,7 @@ class VideoPublishedProxy(Video):
 
 
 class VideoAllProxy(Video):
+
     class Meta:
         proxy = True
         verbose_name = 'All Video'

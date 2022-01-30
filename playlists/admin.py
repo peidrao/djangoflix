@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from .models import Playlist, PlaylistItem, TVShowProxy, TVShowSeasonProxy
-
+from django_flix.db.choices import PlaylistTypeChoice
 
 class SeasonEpisodeInline(admin.TabularInline):
     model = PlaylistItem
@@ -51,6 +51,9 @@ class PlaylistAdmin(admin.ModelAdmin):
 
     class Meta:
         model = Playlist
+
+    def get_queryset(self, request):
+        return Playlist.objects.filter(type_video=PlaylistTypeChoice.PLAYLIST)
 
 
 admin.site.register(Playlist, PlaylistAdmin)

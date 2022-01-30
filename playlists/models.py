@@ -2,7 +2,7 @@ from django.db import models
 from django.db.models.signals import pre_save
 from django.utils import timezone
 
-from django_flix.db.choices import PublishedStateOptions
+from django_flix.db.choices import PlaylistTypeChoice, PublishedStateOptions
 from django_flix.db.receivers import publish_state_pre_save, slugify_pre_save
 
 from videos.models import Video
@@ -26,7 +26,7 @@ class PlaylistManager(models.Manager):
 
 
 class Playlist(models.Model):
-    parent = models.ForeignKey('self', on_delete=models.SET_NULL, null=True)
+    parent = models.ForeignKey('self', blank=True, on_delete=models.SET_NULL, null=True)
     order = models.IntegerField(default=1)
     title = models.CharField(max_length=150)
     description = models.TextField()
@@ -63,7 +63,7 @@ class Playlist(models.Model):
 class TVShowProxyManager(PlaylistManager):
 
     def all(self):
-        return self.get_queryset().filter(parent__isnull=True)
+        return self.get_queryset().filter(parent__isnull=True, type_video=PlaylistTypeChoice.SHOW)
 
 
 class TVShowProxy(Playlist):
@@ -78,7 +78,7 @@ class TVShowProxy(Playlist):
 class TVShowSeasonProxyManager(PlaylistManager):
 
     def all(self):
-        return self.get_queryset().filter(parent__isnull=False)
+        return self.get_queryset().filter(parent__isnull=False, type_video=PlaylistTypeChoice.SEASON)
 
 
 class TVShowSeasonProxy(Playlist):

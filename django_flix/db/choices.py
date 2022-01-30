@@ -8,3 +8,10 @@ class PublishedStateOptions(models.TextChoices):
     DRAFT = 'DR', 'Draft'
     # UNLISTED = 'UN', 'Publish'
     # PRIVATE = 'PR', 'Private'
+
+
+class PlaylistTypeChoice(models.TextChoices):
+    MOVIE = 'MOV', 'Movie'
+    SHOW = 'TVS', 'TV Show'
+    SEASON = 'SEA', 'Season'
+    PLAYLIST = 'PLY', 'Playlist'
