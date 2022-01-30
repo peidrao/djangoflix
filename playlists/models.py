@@ -73,6 +73,10 @@ class TVShowProxy(Playlist):
         verbose_name = 'TV Show'
         verbose_name_plural = 'TV Shows'
         proxy = True
+    
+    def save(self, *args, **kwargs):
+        self.type_video = PlaylistTypeChoice.SHOW
+        super().save(*args, **kwargs)
 
 
 class TVShowSeasonProxyManager(PlaylistManager):
@@ -88,6 +92,28 @@ class TVShowSeasonProxy(Playlist):
         verbose_name = 'Season'
         verbose_name_plural = 'Seasons'
         proxy = True
+
+    def save(self, *args, **kwargs):
+        self.type_video = PlaylistTypeChoice.SEASON
+        super().save(*args, **kwargs)
+
+class MovieProxyManager(PlaylistManager):
+
+    def all(self):
+        return self.get_queryset().filter(type_video=PlaylistTypeChoice.MOVIE)
+
+
+class MovieProxy(Playlist):
+    objects = MovieProxyManager()
+
+    class Meta:
+        verbose_name = 'Movie'
+        verbose_name_plural = 'Movies'
+        proxy = True
+
+    def save(self, *args, **kwargs):
+        self.type_video = PlaylistTypeChoice.MOVIE
+        super().save(*args, **kwargs)
 
 
 class PlaylistItem(models.Model):
