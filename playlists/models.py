@@ -38,7 +38,7 @@ class Playlist(models.Model):
                                   choices=PlaylistTypeChoice.choices,
                                   default=PlaylistTypeChoice.PLAYLIST)
     category = models.ForeignKey(
-        Category, on_delete=models.SET_NULL, null=True, blank=True)
+        Category, on_delete=models.SET_NULL, related_name='playlist_category', null=True, blank=True)
     video = models.ForeignKey(Video,
                               null=True,
                               related_name='featured_playlist',

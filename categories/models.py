@@ -1,5 +1,7 @@
 from django.db import models
+from django.db.models.signals import pre_save
 
+from django_flix.db.receivers import slugify_pre_save
 # Create your models here.
 
 
@@ -13,3 +15,9 @@ class Category(models.Model):
     class Meta:
         verbose_name = 'Category'
         verbose_name_plural = 'Categories'
+
+    def __str__(self) -> str:
+        return f'{self.title}'
+
+
+pre_save.connect(slugify_pre_save, sender=Category)
