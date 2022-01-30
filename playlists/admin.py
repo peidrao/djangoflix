@@ -1,7 +1,19 @@
 from django.contrib import admin
 
-from .models import Playlist, PlaylistItem, TVShowProxy, TVShowSeasonProxy
+from .models import MovieProxy, Playlist, PlaylistItem, TVShowProxy, TVShowSeasonProxy
 from django_flix.db.choices import PlaylistTypeChoice
+
+
+class MovideProxyAdmin(admin.ModelAdmin):
+    list_display = ['title']
+    fields = ['title', 'description', 'state', 'video', 'slug']
+
+    class Meta:
+        model = MovieProxy
+
+    def get_queryset(self, request):
+        return MovieProxy.objects.all()
+
 
 class SeasonEpisodeInline(admin.TabularInline):
     model = PlaylistItem
@@ -14,7 +26,7 @@ class TVShowSeasonProxyAdmin(admin.ModelAdmin):
 
     class Meta:
         model = TVShowSeasonProxy
-    
+
     def get_queryset(self, request):
         return TVShowSeasonProxy.objects.all()
 
@@ -57,5 +69,6 @@ class PlaylistAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Playlist, PlaylistAdmin)
+admin.site.register(MovieProxy, MovideProxyAdmin)
 admin.site.register(TVShowProxy, TVShowProxyAdmin)
 admin.site.register(TVShowSeasonProxy, TVShowSeasonProxyAdmin)

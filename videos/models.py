@@ -2,7 +2,7 @@ from django.db import models
 from django.db.models.signals import pre_save
 from django.utils import timezone
 
-from django_flix.db.choices import PlaylistTypeChoice, PublishedStateOptions
+from django_flix.db.choices import PublishedStateOptions
 from django_flix.db.receivers import publish_state_pre_save, slugify_pre_save
 
 
@@ -27,9 +27,7 @@ class Video(models.Model):
     title = models.CharField(max_length=150)
     description = models.TextField()
     slug = models.SlugField(blank=True, null=True)
-    type_video = models.CharField(max_length=3,
-                                  choices=PlaylistTypeChoice.choices,
-                                  default=PlaylistTypeChoice.PLAYLIST)
+    
     video_id = models.CharField(max_length=100, unique=True)
     is_active = models.BooleanField(default=True)
     state = models.CharField(max_length=2,

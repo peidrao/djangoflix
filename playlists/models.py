@@ -32,6 +32,9 @@ class Playlist(models.Model):
     description = models.TextField()
     slug = models.SlugField(blank=True, null=True)
     is_active = models.BooleanField(default=True)
+    type_video = models.CharField(max_length=3,
+                                  choices=PlaylistTypeChoice.choices,
+                                  default=PlaylistTypeChoice.PLAYLIST)
     video = models.ForeignKey(Video,
                               null=True,
                               related_name='featured_playlist',
