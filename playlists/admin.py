@@ -1,7 +1,8 @@
 from django.contrib import admin
 
-from .models import MovieProxy, Playlist, PlaylistItem, TVShowProxy, TVShowSeasonProxy
 from django_flix.db.choices import PlaylistTypeChoice
+from tags.admin import TaggedItemInline
+from .models import MovieProxy, Playlist, PlaylistItem, TVShowProxy, TVShowSeasonProxy
 
 
 class MovideProxyAdmin(admin.ModelAdmin):
@@ -38,7 +39,7 @@ class TVShowSeasonProxyInline(admin.TabularInline):
 
 
 class TVShowProxyAdmin(admin.ModelAdmin):
-    inlines = [TVShowSeasonProxyInline]
+    inlines = [TVShowSeasonProxyInline, TaggedItemInline]
     fields = ['title', 'description', 'state', 'video', 'slug', 'category']
 
     class Meta:
