@@ -1,5 +1,6 @@
 import random
 from django.contrib.auth import get_user_model
+from django.db.models import Avg
 from django.test import TestCase
 from django_flix.db.choices import RatingChoices
 
@@ -29,10 +30,16 @@ class RatingTestCase(TestCase):
 
     def create_ratings(self):
         self.rating_count = random.randint(10, 100)
+        self.rating_totals = []
         items = list()
         for _ in range(0, self.rating_count):
-            items.append(Rating(user=self.users.first(), content_object=self.playlists.last(
-            ), value=random.choices(RatingChoices.choices)[0][0]))
+            rating_val = random.choices(RatingChoices.choices)[0][0]
+            self.rating_totals.append(rating_val)
+            
+            if rating_val is not None:
+                self.rating_totals.append(rating_val)
+                items.append(Rating(user=self.users.first(), content_object=self.playlists.last(
+                ), value=rating_val))
         Rating.objects.bulk_create(items)
         self.ratings = Rating.objects.all()
 
@@ -49,7 +56,6 @@ class RatingTestCase(TestCase):
         self.assertTrue(self.playlists.exists())
         self.assertEqual(self.playlists.count(), self.playlist_count)
 
-
     def test_rating_count(self):
         self.assertTrue(self.ratings.exists())
         self.assertEqual(self.ratings.count(), self.rating_count)
@@ -57,3 +63,14 @@ class RatingTestCase(TestCase):
     def test_rating_random_choices(self):
         values = list(Rating.objects.values_list('value', flat=True))
         self.assertTrue(len(values) > 1)
+
+    def test_rating_agg(self):
+        item_1 = Rating.objects.aggregate(average=Avg('value'))['average']
+        self.assertIsNotNone(item_1)
+        self.assertTrue(item_1 > 0)
+
+    def test_rating_playlist_agg(self):
+        item_1 = Playlist.objects.aggregate(
+            average=Avg('ratings__value'))['average']
+        self.assertIsNotNone(item_1)
+        self.assertTrue(item_1 > 0)

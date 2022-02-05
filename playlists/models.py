@@ -1,4 +1,5 @@
 from django.contrib.contenttypes.fields import GenericRelation
+from django.db.models import Avg, Max, Min
 from django.db.models.signals import pre_save
 from django.db import models
 from django.utils import timezone
@@ -8,6 +9,7 @@ from categories.models import Category
 from django_flix.db.choices import PlaylistTypeChoice, PublishedStateOptions
 from django_flix.db.receivers import publish_state_pre_save, slugify_pre_save
 from tags.models import TaggedItem
+from ratings.models import Rating
 
 from videos.models import Video
 
@@ -60,15 +62,24 @@ class Playlist(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     tags = GenericRelation(TaggedItem, related_query_name='playlist')
+    ratings = GenericRelation(Rating, related_query_name='rating')
 
     objects = PlaylistManager()
 
     def __str__(self) -> str:
         return f'id: {self.id} - title: {self.title}'
 
+    def get_rating_avg(self):
+        return Playlist.objects.filter(id=self.id).aggregate(Avg('ratings__value'))
+    
+    def get_rating_spread(self):
+        return Playlist.objects.filter(id=self.id).aggregate(max=Max('ratings__value'), min=Min('ratings__value'))
+
+
     @property
     def is_published(self):
         return self.is_active
+
 
 
 class TVShowProxyManager(PlaylistManager):

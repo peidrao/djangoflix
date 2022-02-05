@@ -5,7 +5,6 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 
 from django_flix.db.choices import RatingChoices
-from playlists.models import Playlist
 
 # Create your models here.
 
@@ -21,4 +20,4 @@ class Rating(models.Model):
     content_object = GenericForeignKey('content_type', 'object_id')
 
     def __str__(self) -> str:
-        return str(self.tag)
+        return str(self.value)
