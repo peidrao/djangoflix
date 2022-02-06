@@ -30,6 +30,9 @@ class PlaylistManager(models.Manager):
     def published(self):
         return self.get_queryset().published()
 
+    def featured_playlist(self):
+        return self.get_queryset().filter(type_video=PlaylistTypeChoice.PLAYLIST)
+
 
 class Playlist(models.Model):
     parent = models.ForeignKey(
@@ -71,15 +74,13 @@ class Playlist(models.Model):
 
     def get_rating_avg(self):
         return Playlist.objects.filter(id=self.id).aggregate(Avg('ratings__value'))
-    
+
     def get_rating_spread(self):
         return Playlist.objects.filter(id=self.id).aggregate(max=Max('ratings__value'), min=Min('ratings__value'))
-
 
     @property
     def is_published(self):
         return self.is_active
-
 
 
 class TVShowProxyManager(PlaylistManager):
