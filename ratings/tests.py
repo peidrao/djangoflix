@@ -56,10 +56,6 @@ class RatingTestCase(TestCase):
         self.assertTrue(self.playlists.exists())
         self.assertEqual(self.playlists.count(), self.playlist_count)
 
-    def test_rating_count(self):
-        self.assertTrue(self.ratings.exists())
-        self.assertEqual(self.ratings.count(), self.rating_count)
-
     def test_rating_random_choices(self):
         values = list(Rating.objects.values_list('value', flat=True))
         self.assertTrue(len(values) > 1)
