@@ -2,6 +2,7 @@ from django.utils import timezone
 from django.utils.text import slugify
 
 from .choices import PublishedStateOptions
+from .utils import get_unique_slug
 
 
 def publish_state_pre_save(sender, instance, *args, **kwargs):
@@ -16,3 +17,7 @@ def publish_state_pre_save(sender, instance, *args, **kwargs):
 def slugify_pre_save(sender, instance, *args, **kwargs):
     if instance.slug is None:
         instance.slug = slugify(instance.title)
+
+def unique_slugify_pre_save(sender, instance, *args, **kwargs):
+    if instance.slug is None:
+        instance.slug = get_unique_slug(instance)

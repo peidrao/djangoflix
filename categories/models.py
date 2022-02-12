@@ -2,7 +2,7 @@ from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from django.db.models.signals import pre_save
 
-from django_flix.db.receivers import slugify_pre_save
+from django_flix.db.receivers import slugify_pre_save, unique_slugify_pre_save
 from tags.models import TaggedItem
 # Create your models here.
 
@@ -23,4 +23,4 @@ class Category(models.Model):
         return f'{self.title}'
 
 
-pre_save.connect(slugify_pre_save, sender=Category)
+pre_save.connect(unique_slugify_pre_save, sender=Category)
