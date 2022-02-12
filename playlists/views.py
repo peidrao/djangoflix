@@ -1,3 +1,4 @@
+from django.http import Http404
 from django.shortcuts import render
 from django.views import generic
 
@@ -50,7 +51,7 @@ class TVShowSeasonDetailView(TitleMixin, generic.DetailView):
             parent__slug__iexact=show_slug, slug__iexact=season_slug)
         
         if not qs.count() == 1:
-            raise Exception('Not found')
+            raise Http404
         return qs.first()
 
 

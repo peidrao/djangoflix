@@ -12,10 +12,12 @@
 
 {% block content %}
 
-
-
-{% if title %} <h1>{{title}}</h1> {% endif %}
 <h1> {{object.title}} </h1>
+{% for season in object.seasons %}
+
+    <li>{{season.title}}</li>
+
+{% endfor %}
 
 
 {% endblock content %}

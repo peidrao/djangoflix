@@ -155,3 +155,14 @@ class PlaylistItem(models.Model):
 
 pre_save.connect(publish_state_pre_save, sender=Playlist)
 pre_save.connect(slugify_pre_save, sender=Playlist)
+
+pre_save.connect(publish_state_pre_save, sender=MovieProxy)
+pre_save.connect(slugify_pre_save, sender=MovieProxy)
+
+pre_save.connect(publish_state_pre_save, sender=TVShowSeasonProxy)
+pre_save.connect(slugify_pre_save, sender=TVShowSeasonProxy)
+
+pre_save.connect(publish_state_pre_save, sender=TVShowProxy)
+pre_save.connect(slugify_pre_save, sender=TVShowProxy)
+
+
