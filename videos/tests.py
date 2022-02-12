@@ -9,9 +9,6 @@ class VideoModelTestCase(TestCase):
         self.video1 = Video.objects.create(title='This is my video!', video_id='123')
         self.video2 =Video.objects.create(title='This is life!',
                              state=PublishedStateOptions.PUBLISHED, video_id='456')
-    def test_slug_field(self):
-        self.assertEqual(self.video1.slug, 'this-is-my-video')
-        self.assertEqual(self.video2.slug, 'this-is-life')
 
     def test_valid_title(self):
         title = 'This is my video!'
